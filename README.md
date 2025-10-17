@@ -19,7 +19,7 @@
 - **[Database Schema](./docs/database-schema.md)** - Full schema documentation
 - **[Development Guide](./CLAUDE.md)** - Setup, patterns, and best practices
 
-**Current Status:** 🟡 MVP Phase - Database foundation complete, building file upload system
+**Current Status:** 🟡 MVP Phase - File intake infrastructure complete, ready for agent implementation
 
 ---
 
