@@ -19,7 +19,7 @@
 - **[Database Schema](./docs/database-schema.md)** - Full schema documentation
 - **[Development Guide](./CLAUDE.md)** - Setup, patterns, and best practices
 
-**Current Status:** 🟡 MVP Phase - File intake infrastructure complete, ready for agent implementation
+**Current Status:** 🟡 MVP Phase - Cash Commander agent implemented, building artifact generation
 
 ---
 
