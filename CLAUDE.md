@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Custom Claude Code Agents
+
+This project includes specialized subagents for code review and testing:
+
+- **`/architect-review`** - Reviews code for architectural alignment, FastAPI best practices, security, and design patterns
+- **`/tester-review`** - Analyzes test coverage and generates missing test implementations
+
+See [`.claude/README.md`](.claude/README.md) for detailed usage instructions.
+
+**Recommended Workflow:**
+1. Implement feature → 2. Run `/architect-review` → 3. Fix issues → 4. Run `/tester-review` → 5. Implement tests → 6. Commit
+
 ## Project Overview
 
 **Agentic CFO Platform** is an Excel-first, multi-agent financial automation system powered by LangGraph orchestration. The platform processes uploaded Excel/CSV files through 30+ specialized finance agents to deliver cash forecasting, margin analysis, rolling forecasts, capital allocation, and compliance—without requiring system integrations.
