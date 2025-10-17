@@ -4,99 +4,123 @@
 
 ## Current Status
 
-✅ **Completed:** File Intake Layer (Layer 1) with P0 and P1 fixes
-- Security hardening (path traversal, file size validation, transaction management)
-- Comprehensive audit trail (100% action logging)
-- Granular error handling (proper HTTP status codes)
-- Database optimization (composite indexes)
+✅ **Completed:** Layer 1 (File Intake) + Agent Architecture Foundation
+- **Layer 1:** File intake infrastructure with security hardening, audit trails, error handling
+- **OpenRouter Integration:** Multi-model LLM support (GPT-4, Claude-3.5, GPT-3.5, Llama-3.1)
+- **BaseFinanceAgent:** Abstract base class with tool framework, confidence scoring, reasoning traces
+- **Cash Commander Agent:** 13-week cash forecasting with 4 custom tools (90% complete)
+- **Sample Test Data:** 4 realistic Excel files (BankStatement, TrialBalance, AR, AP)
+- **Security:** Comprehensive .gitignore and SECURITY.md with secrets protection
+
+**Overall Progress:** ~60% of MVP complete
+
+📁 **Session Summary:** See [SESSION_SUMMARY.md](SESSION_SUMMARY.md) for detailed implementation notes
+
+---
+
+## 🚀 Quick Start (Next Session)
+
+**To continue development:**
+
+1. **Install new dependencies:**
+   ```bash
+   cd backend
+   source venv/bin/activate
+   pip install langchain==0.1.0 langchain-openai==0.0.2 langgraph==0.0.20 openai==1.7.2
+   ```
+
+2. **Verify OpenRouter API key is set:**
+   ```bash
+   grep OPENROUTER_API_KEY backend/.env
+   # Should show: OPENROUTER_API_KEY=sk-or-v1-b657...
+   ```
+
+3. **Start development server:**
+   ```bash
+   ./run.sh
+   # Backend: http://localhost:8000
+   # Frontend: http://localhost:5173
+   # Docs: http://localhost:8000/docs
+   ```
+
+4. **Start with Step 4 below** - Excel Artifact Generator (highest priority)
+
+---
 
 ## Immediate Next Steps
 
-### 1. Testing & Validation
-**Priority:** High
-**Estimated Time:** 2-4 hours
+### 1. ✅ ~~Testing & Validation~~ (COMPLETED)
+**Status:** Done ✓
+**Files Created:**
+- `backend/tests/sample_files/` (BankStatement, TrialBalance, AR_OpenItems, AP_OpenItems)
+- `backend/tests/generate_sample_files.py`
+- `backend/tests/test_upload_flow.py`
 
-- [ ] Create sample test files (Excel/CSV) for each template type:
-  - BankStatement.xlsx
-  - TrialBalance.xlsx
-  - AP_OpenItems.xlsx
-  - AR_Aging.xlsx
-  - POS_Sales.csv
-- [ ] Test file upload API endpoint with samples
-- [ ] Verify template detection accuracy
-- [ ] Verify column mapping results
-- [ ] Verify DQ validation checks
-- [ ] Test error handling with malformed files
-- [ ] Run `/tester-review` to analyze test coverage and generate missing test implementations
+### 2. ✅ ~~Base Agent Architecture~~ (COMPLETED)
+**Status:** Done ✓
+**Files Created:**
+- `backend/app/agents/base.py` - BaseFinanceAgent with tool framework
+- `backend/app/agents/llm_config.py` - OpenRouter multi-model integration
+- `backend/app/agents/__init__.py` - Agent registry
 
-### 2. Layer 2: LangGraph Orchestration
+### 3. ✅ ~~Cash Commander Agent~~ (90% COMPLETE)
+**Status:** Nearly done, missing artifact generation ⚠️
+**Files Created:**
+- `backend/app/agents/treasury/cash_commander.py` - Full implementation
+- `backend/app/api/agents.py` - API endpoint for execution
+
+**Remaining Tasks:**
+- [ ] Complete `_generate_artifacts()` method (currently returns placeholder)
+- [ ] Implement Excel generation for Cash Ladder
+
+### 4. Excel Artifact Generator ⬅️ **START HERE**
+**Priority:** HIGHEST (blocks MVP demo)
+**Estimated Time:** 2-3 hours
+
+**Implementation:**
+- [ ] Create `backend/app/artifacts/excel_generator.py`
+  - `generate_cash_ladder(forecast_data: Dict) -> str` - Returns file path
+  - Use openpyxl for Excel generation
+  - Columns: Week, Beginning Balance, Receipts, Disbursements, Ending Balance
+  - Add formatting: currency, borders, totals row
+  - Optional: Conditional formatting for low balance warnings
+- [ ] Update `CashCommanderAgent._generate_artifacts()` to call generator
+- [ ] Store artifact in `settings.artifacts_dir` with UUID filename
+- [ ] Add artifact metadata to response
+
+**Test:**
+```bash
+# Upload bank statement → Process → Execute Cash Commander → Verify Excel output
+```
+
+### 5. End-to-End Integration Test
 **Priority:** High
-**Estimated Time:** 4-6 days (MVP Sprint Days 6-8)
+**Estimated Time:** 1 hour
+
+- [ ] Test complete flow: Upload → Process → Execute Agent → Download Artifact
+- [ ] Verify artifact contains actual forecast data
+- [ ] Test error handling (missing datasets, invalid inputs)
+- [ ] Document the test in `backend/tests/test_integration_cash_commander.py`
+
+### 6. Layer 2: LangGraph Orchestration
+**Priority:** Medium (can demo without this, but needed for multi-agent workflows)
+**Estimated Time:** 4-6 hours
 
 - [ ] Create Work Order State Graph schema
-  - Define `WorkOrderState` TypedDict
+  - Define `WorkOrderState` TypedDict in `backend/app/orchestration/state.py`
   - Implement PostgreSQL checkpointing
-  - Create state management utilities
-- [ ] Implement graph nodes:
-  - `dq_validation_node` (entry point)
-  - `routing_node` (routes to appropriate agents)
-  - `guardrail_node` (policy enforcement)
-  - `critic_node` (quality review)
-  - `approval_gate_node` (human-in-loop)
-  - `artifact_generation_node` (output creation)
-- [ ] Set up LangGraph execution flow:
-  - Conditional edges based on Work Order objective
-  - State persistence to PostgreSQL
-  - Interrupt mechanism for approval gates
-- [ ] Integration with file intake layer
-  - Trigger Work Order on successful dataset creation
-  - Pass dataset IDs and metadata to graph
+- [ ] Implement basic graph nodes in `backend/app/orchestration/nodes.py`:
+  - `routing_node` - Routes to Cash Commander
+  - `agent_execution_node` - Executes agent
+  - `artifact_generation_node` - Generates outputs
+- [ ] Create `backend/app/orchestration/graph.py`:
+  - StateGraph definition
+  - Conditional edges
+  - Checkpointing config
+- [ ] Create Work Order CRUD API: `POST /api/work-orders/`, `GET /api/work-orders/{id}`
+- [ ] Wire up: File upload → Create Work Order → Execute Graph → Return results
 
-### 3. Base Agent Architecture
-**Priority:** High
-**Estimated Time:** 1-2 days
-
-- [ ] Create `backend/app/agents/base.py`:
-  - `BaseFinanceAgent` abstract class
-  - OpenRouter LLM integration
-  - Tool execution framework
-  - Output schema (reasoning_trace, confidence_score, artifacts)
-- [ ] Create agent registry (`backend/app/agents/__init__.py`)
-- [ ] Define agent configuration (`backend/app/orchestration/config.py`):
-  - `AGENT_MODEL_MAP` (which model per agent)
-  - Temperature and token limits
-  - Retry policies
-
-### 4. Cash Commander Agent (MVP)
-**Priority:** High
-**Estimated Time:** 3-4 days (MVP Sprint Days 6-8)
-
-- [ ] Implement `backend/app/agents/treasury/cash_commander.py`
-- [ ] Create custom tools:
-  - `analyze_bank_statement` - Extract cash positions
-  - `forecast_cash_flow` - Project future balances
-  - `identify_outliers` - Flag unusual transactions
-- [ ] Define system prompt and responsibilities
-- [ ] Implement artifact generation:
-  - `Cash_Ladder.xlsx` - 13-week rolling forecast
-  - `Liquidity_Warnings.pdf` - Risk alerts
-- [ ] Integration with LangGraph orchestration
-
-### 5. Excel Artifact Generator
-**Priority:** High
-**Estimated Time:** 2-3 days (MVP Sprint Days 11-12)
-
-- [ ] Create `backend/app/artifacts/excel_generator.py`
-  - Template-based generation using openpyxl
-  - Dynamic table creation
-  - Chart generation (cash waterfall, variance bridge)
-- [ ] Create artifact templates:
-  - Cash Ladder template
-  - GM Bridge template
-  - Portfolio Ranking template
-- [ ] File storage and checksum calculation
-
-### 6. Frontend Components (MVP)
+### 7. Frontend Components (MVP)
 **Priority:** Medium
 **Estimated Time:** 3-4 days (MVP Sprint Days 13-14)
 
