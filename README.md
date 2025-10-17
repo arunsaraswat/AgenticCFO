@@ -1,267 +1,533 @@
-# Full-Stack Starter Template
+# Agentic CFO Platform
 
-A production-ready, batteries-included template for building modern full-stack applications. Get started quickly with a pre-configured stack featuring FastAPI backend, React TypeScript frontend, database migrations, authentication, and comprehensive testing—all ready to customize for your specific needs.
+**A CFO that never sleeps** — An Excel-first, multi-agent financial automation platform that delivers cash forecasting, margin analysis, rolling forecasts, capital allocation, and embedded controls—all from uploaded spreadsheets.
 
-## 🚀 What's Included
+[![Version](https://img.shields.io/badge/version-0.2--excel--first-blue)]()
+[![License](https://img.shields.io/badge/license-MIT-green)]()
+[![Python](https://img.shields.io/badge/python-3.11+-blue)]()
+[![React](https://img.shields.io/badge/react-18+-61DAFB)]()
 
-This template provides everything you need to start building a full-stack application:
+---
 
-- ✅ **Modern Backend** - FastAPI with async support, auto-generated API docs
-- ✅ **Modern Frontend** - React 18+ with TypeScript and Tailwind CSS
-- ✅ **Database Ready** - PostgreSQL with SQLAlchemy ORM and Alembic migrations
-- ✅ **Authentication** - JWT-based auth with secure password hashing
-- ✅ **Testing** - Comprehensive test suites for both frontend and backend
-- ✅ **Developer Experience** - Hot reload, type safety, linting, and scripts
-- ✅ **Production Ready** - Security best practices and deployment guides
+## 🎯 Vision
 
-## 📋 Tech Stack
+Ship a supervised **mesh of finance agents** orchestrated by **LangGraph** that process Excel/CSV files to deliver:
 
-### Backend
-- **[FastAPI](https://fastapi.tiangolo.com/)** - Modern Python web framework
-- **[SQLAlchemy](https://www.sqlalchemy.org/)** - SQL toolkit and ORM
-- **[Alembic](https://alembic.sqlalchemy.org/)** - Database migration tool
-- **[Pydantic](https://docs.pydantic.dev/)** - Data validation
-- **[pytest](https://pytest.org/)** - Testing framework
-- **PostgreSQL** - Database (via Supabase)
+- **13-week cash forecasting** with liquidity warnings
+- **Day-3 month-end close** with auto-reconciliations
+- **Margin bridges** and variance explanations (Price/Volume/Mix)
+- **Rolling forecasts** and capital allocation rankings (EVA/NPV/IRR)
+- **Policy-as-code** enforcement with immutable audit trails
 
-### Frontend
-- **[React 18+](https://react.dev/)** - UI library
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
-- **[Vite](https://vitejs.dev/)** - Build tool
-- **[Tailwind CSS](https://tailwindcss.com/)** - Styling
-- **[React Router](https://reactrouter.com/)** - Routing
-- **[Axios](https://axios-http.com/)** - HTTP client
-- **[Jest](https://jestjs.io/)** - Testing framework
+**No integrations required.** Upload the Excel files you already export from your ERP/bank/POS systems, and agents do the rest.
+
+---
+
+## 🚀 What Makes This Different
+
+### Excel-First Approach
+- **Zero mandatory integrations** — All insights run from uploaded files
+- **Template catalog** with mapping memory learns your column names
+- **Workbook Auditor** scans for macros, external links, hidden sheets
+- **Dataset versioning** tracks every upload with full lineage
+
+### Agentic Architecture
+- **30+ specialized agents** for treasury, R2R, FP&A, controls, and industry-specific tasks
+- **LangGraph orchestration** with human-above-the-loop approval gates
+- **Multi-model LLM strategy** (GPT-4 for reasoning, Claude-3.5 for analysis, GPT-3.5 for routine tasks)
+- **Guardrail & Critic agents** enforce policies and validate outputs
+
+### Production-Ready Controls
+- **Policy-as-code:** Materiality thresholds, SoD checks, treasury limits
+- **Immutable audit logs:** Who, what, when, why—for every action
+- **Evidence bundles:** ZIP exports with artifacts + logs + policy versions
+- **Explainable AI:** Every agent provides reasoning traces and confidence scores
+
+---
+
+## 📋 Key Features
+
+### 1. File Intake Gateway
+- **Multi-channel ingestion:** Web upload, SFTP drop box, email inbox
+- **Virus scanning** and macro stripping
+- **Template detection:** Auto-identifies TrialBalance, AP_OpenItems, POS_Sales, etc.
+- **Mapping Studio:** Semantic column matching with mapping memory
+
+### 2. Agent Network (30+ Agents)
+
+#### Treasury & Working Capital
+- **Cash Commander:** 13-week forecasts, liquidity alerts, covenant checks
+- **Receivables Radar:** DSO optimization, collection prioritization
+- **Payables Protector:** Duplicate detection, early-pay ROI, terms optimization
+
+#### Record-to-Report & Performance
+- **Close Copilot:** Auto-recs, accruals, Day-3 close status
+- **Margin Mechanic:** P/V/M bridges, inflation vs. productivity analysis
+- **Cost Genome:** Vendor taxonomy, consolidation opportunities
+
+#### FP&A & Capital Allocation
+- **Forecast Factory:** Rolling forecasts, scenario trees, variance explanations
+- **Portfolio Allocator:** EVA/NPV/IRR ranking, risk-adjusted screens
+- **Deal Diligence:** M&A valuation, integration risk assessment
+
+#### Controls & Compliance
+- **Guardrail:** Policy enforcement (SoD, limits, materiality)
+- **Critic:** Statistical validation, outlier detection
+- **Compliance Scribe:** Audit logs, evidence bundles
+- **Workbook Auditor:** Spreadsheet risk assessment
+
+#### Industry-Specific Agents
+- **Retail:** GMROI Optimizer, Promo ROI, Assortment, Store & Labor
+- **Energy:** CFaR Analyst, Hedge Strategist, Turnaround Planner, Emissions Accountant
+
+### 3. Orchestration (LangGraph)
+- **Work Order Graph:** Routes uploaded files through agent networks
+- **State persistence:** PostgreSQL checkpointing for resumable workflows
+- **Approval gates:** Human-above-the-loop reviews at defined checkpoints
+- **Real-time updates:** WebSocket progress tracking
+
+### 4. Outputs & Artifacts
+- **Excel artifacts:** Cash_Ladder.xlsx, GM_Bridge_BU_SKU.xlsx, Portfolio_Ranked.xlsx
+- **PDF reports:** Liquidity_Warnings.pdf, Covenant_Report.pdf
+- **Investment memos:** Auto-generated Word documents
+- **Evidence bundles:** ZIP exports with full lineage for auditors
+
+---
 
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   Frontend (React + TypeScript)              │
-│                                                              │
-│  Pages → Components → Services → API Client                 │
-│  (Auth, Dashboard)   (Reusable)  (Business)  (Axios)       │
-│                                                              │
-└──────────────────────────┬───────────────────────────────────┘
+│                 FRONTEND (React + TypeScript)                │
+│   Upload Wizard │ Mapping Studio │ CFO Dashboard            │
+│                 WebSocket Real-Time Updates                  │
+└──────────────────────────┬──────────────────────────────────┘
                            │
-                      REST API (JSON)
-                           │
-┌──────────────────────────▼───────────────────────────────────┐
-│                   Backend (FastAPI + Python)                 │
+┌──────────────────────────▼──────────────────────────────────┐
+│                 BACKEND (FastAPI + Python)                   │
 │                                                              │
-│  Routes → Services → Models → Database                       │
-│  (Endpoints) (Logic) (ORM)   (PostgreSQL)                   │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  FILE INTAKE GATEWAY                                 │  │
+│  │  Upload API → Workbook Auditor → Mapping Studio     │  │
+│  │  → DQ Validator → Dataset Staging (Versioned)       │  │
+│  └────────────────────┬─────────────────────────────────┘  │
+│                       │                                      │
+│  ┌────────────────────▼─────────────────────────────────┐  │
+│  │  LANGGRAPH ORCHESTRATION                            │  │
+│  │  DQ → Routing → Agent Network → Guardrail →        │  │
+│  │  Critic → Approval Gate → Artifact Generation      │  │
+│  └────────────────────┬─────────────────────────────────┘  │
+│                       │                                      │
+│  ┌────────────────────▼─────────────────────────────────┐  │
+│  │  AGENT NETWORK (30+ Specialized Agents)            │  │
+│  │  Treasury │ R2R │ FP&A │ Controls │ Industry       │  │
+│  └────────────────────┬─────────────────────────────────┘  │
+│                       │                                      │
+│  ┌────────────────────▼─────────────────────────────────┐  │
+│  │  LLM LAYER (OpenRouter Multi-Model)                 │  │
+│  │  GPT-4 │ Claude-3.5 │ GPT-3.5 │ Llama-3.1         │  │
+│  └────────────────────┬─────────────────────────────────┘  │
+│                       │                                      │
+│  ┌────────────────────▼─────────────────────────────────┐  │
+│  │  OUTPUT & AUDIT LAYER                               │  │
+│  │  Artifacts (Excel/PDF/Word) │ Immutable Logs       │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+
+Infrastructure: PostgreSQL/Supabase │ Redis (Celery) │ ChromaDB │ WebSockets
 ```
 
-## 🎯 Quick Start
+See [docs/architecture.md](docs/architecture.md) for detailed technical design.
+
+---
+
+## 📦 Tech Stack
+
+### Backend (Python/FastAPI)
+- **Orchestration:** LangGraph 0.2+, LangChain 0.3+
+- **LLMs:** OpenRouter API (GPT-4, Claude-3.5, GPT-3.5, Llama-3.1)
+- **Data Processing:** Pandas 2.1+, Polars 0.20+, OpenPyXL 3.1+
+- **Database:** PostgreSQL 15+ / Supabase, Redis 7.0+
+- **Task Queue:** Celery 5.3+ (async agent execution)
+- **Vector Store:** ChromaDB 0.4+ (mapping memory)
+- **Web Framework:** FastAPI 0.109+, Uvicorn
+- **Auth:** JWT tokens (python-jose), bcrypt 4.1+
+
+### Frontend (React/TypeScript)
+- **Core:** React 18+, TypeScript 5.3+, Vite 5+
+- **Styling:** Tailwind CSS 3.4+, Headless UI
+- **State:** React Context, React Query (optional)
+- **API:** Axios 1.6+, Native WebSocket API
+- **Testing:** Jest 29+, React Testing Library
+
+### Infrastructure
+- **Database:** Supabase PostgreSQL (hosted)
+- **Caching:** Redis (for Celery + session cache)
+- **File Storage:** Local filesystem (→ S3 in future)
+- **Deployment:** Railway/Render (backend), Vercel/Netlify (frontend)
+
+---
+
+## 🎬 Quick Start
 
 ### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- Supabase account (free tier works)
+- OpenRouter API key ([openrouter.ai](https://openrouter.ai))
+- Redis server (local or cloud)
 
-- Python 3.9 or higher
-- Node.js 18 or higher
-- A Supabase account (free tier works) or any PostgreSQL database
-
-### 1. Clone This Template
-
+### 1. Clone Repository
 ```bash
-git clone https://github.com/arunsaraswat/full-stack-starter.git your-app-name
-cd your-app-name
+git clone https://github.com/yourusername/AgenticCFO.git
+cd AgenticCFO
 ```
 
 ### 2. Backend Setup
-
 ```bash
 cd backend
 
-# Create and activate virtual environment
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Configure environment
 cp .env.example .env
-# Edit .env with your database credentials
-```
+# Edit .env with your credentials:
+#   DATABASE_URL=<your-supabase-connection-string>
+#   OPENROUTER_API_KEY=<your-openrouter-key>
+#   REDIS_URL=redis://localhost:6379/0
+#   SECRET_KEY=<generate-secure-key>
 
-**Required environment variables (backend/.env):**
-```env
-DATABASE_URL=postgresql://user:password@host:5432/dbname
-SECRET_KEY=your-secret-key-change-this-in-production
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
-```bash
-# Run database migrations
+# Run migrations
 ./migrate.sh upgrade
 
-# (Optional) Seed with sample data
+# Optional: Seed with test data
 ./seed.sh
 ```
 
 ### 3. Frontend Setup
-
 ```bash
 cd ../frontend
 
 # Install dependencies
 npm install
 
-# Configure environment (optional)
+# Configure environment (optional, defaults work for local)
 cp .env.example .env
-# Default values work for local development
 ```
 
-### 4. Run the Application
+### 4. Start Services
 
-**Option A: Run everything at once (recommended)**
+**Option A: Run everything at once**
 ```bash
 # From project root
 ./run.sh
 ```
 
-**Option B: Run separately in different terminals**
+**Option B: Run separately**
 ```bash
 # Terminal 1 - Backend
 cd backend
 ./start.sh
 
-# Terminal 2 - Frontend
+# Terminal 2 - Celery worker (for async agent tasks)
+cd backend
+celery -A app.tasks.celery_app worker --loglevel=info
+
+# Terminal 3 - Frontend
 cd frontend
 ./start.sh
 ```
 
-### 5. Access Your App
+### 5. Access Application
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend API:** [http://localhost:8000](http://localhost:8000)
+- **API Docs (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-- **Frontend:** http://localhost:5173
-- **Backend API:** http://localhost:8000
-- **API Docs (Swagger):** http://localhost:8000/docs
-- **API Docs (ReDoc):** http://localhost:8000/redoc
+---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```
-full-stack-starter/
-├── backend/                    # Python FastAPI Backend
-│   ├── alembic/               # Database migrations
+AgenticCFO/
+├── backend/                        # Python FastAPI Backend
+│   ├── alembic/                   # Database migrations
 │   ├── app/
-│   │   ├── api/              # API endpoints
-│   │   ├── core/             # Config, security, dependencies
-│   │   ├── models/           # Database models
-│   │   ├── schemas/          # Request/response schemas
-│   │   ├── services/         # Business logic
-│   │   ├── db/               # Database connection
-│   │   └── main.py           # App entry point
-│   ├── tests/                # Backend tests
-│   ├── scripts/              # Utility scripts
-│   ├── requirements.txt      # Python dependencies
-│   └── *.sh                  # Helper scripts
+│   │   ├── agents/                # 30+ Finance agents
+│   │   │   ├── treasury/          # Cash Commander, Receivables Radar, etc.
+│   │   │   ├── r2r/               # Close Copilot, Margin Mechanic
+│   │   │   ├── fpa/               # Forecast Factory, Portfolio Allocator
+│   │   │   ├── control/           # Guardrail, Critic, Compliance Scribe
+│   │   │   └── industry/          # Retail, Energy-specific agents
+│   │   ├── orchestration/         # LangGraph workflows
+│   │   │   ├── work_order_graph.py
+│   │   │   ├── state.py
+│   │   │   └── nodes.py
+│   │   ├── intake/                # File ingestion
+│   │   │   ├── uploader.py
+│   │   │   ├── template_catalog.py
+│   │   │   ├── mapping_studio.py
+│   │   │   └── workbook_auditor.py
+│   │   ├── data_quality/          # DQ validators & reconcilers
+│   │   ├── policy/                # Policy engine
+│   │   ├── artifacts/             # Output generation
+│   │   ├── api/                   # FastAPI endpoints
+│   │   ├── core/                  # Config, security, dependencies
+│   │   ├── models/                # SQLAlchemy models
+│   │   ├── schemas/               # Pydantic schemas
+│   │   ├── services/              # Business logic
+│   │   ├── db/                    # Database session
+│   │   └── main.py                # App entry point
+│   ├── tests/                     # Backend tests
+│   ├── requirements.txt           # Python dependencies
+│   └── *.sh                       # Helper scripts
 │
-├── frontend/                  # React TypeScript Frontend
+├── frontend/                      # React TypeScript Frontend
 │   ├── src/
-│   │   ├── components/       # React components
-│   │   ├── pages/            # Page components
-│   │   ├── services/         # API services
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── context/          # React context providers
-│   │   ├── types/            # TypeScript types
-│   │   ├── utils/            # Utility functions
-│   │   ├── App.tsx           # Main app component
-│   │   └── main.tsx          # App entry point
-│   ├── tests/                # Frontend tests
-│   ├── package.json          # Node dependencies
-│   ├── tailwind.config.js    # Tailwind configuration
-│   └── vite.config.ts        # Vite configuration
+│   │   ├── components/            # React components
+│   │   │   ├── upload/            # Upload Wizard
+│   │   │   ├── mapping/           # Mapping Studio
+│   │   │   ├── dashboard/         # CFO Dashboard
+│   │   │   └── work-orders/       # Work Order tracking
+│   │   ├── pages/                 # Page components
+│   │   ├── services/              # API services
+│   │   ├── hooks/                 # Custom React hooks
+│   │   ├── context/               # React context providers
+│   │   ├── types/                 # TypeScript types
+│   │   └── utils/                 # Utility functions
+│   ├── tests/                     # Frontend tests
+│   ├── package.json               # Node dependencies
+│   └── *.config.js/ts             # Build configs
 │
-├── docs/                      # Documentation
-├── run.sh                     # Run full stack
-└── README.md                  # You are here
+├── docs/                          # Documentation
+│   ├── architecture.md            # Detailed architecture (THIS IS COMPREHENSIVE!)
+│   ├── database-schema.md         # Database design
+│   └── api-examples.md            # API usage examples
+│
+├── README.md                      # This file
+├── PROJECT_SUMMARY.md             # Project overview
+├── SETUP.md                       # Quick setup guide
+└── run.sh                         # Main launcher script
 ```
+
+---
+
+## 🎓 Example Workflows
+
+### Workflow 1: Close-to-Forecast (Monthly)
+
+**Upload:**
+- `TrialBalance.xlsx`
+- `JE_Detail.csv`
+- `BankStatement.csv`
+- `AR_OpenItems.xlsx`
+- `AP_OpenItems.xlsx`
+
+**Agent Execution:**
+1. **DQ Validation** checks TB balances, bank-to-GL reconciliation
+2. **Close Copilot** auto-recs accounts, proposes accruals
+3. **Margin Mechanic** builds P/V/M bridges
+4. **Forecast Factory** rolls forward using actuals + drivers
+5. **Critic** challenges outliers, flags low-confidence
+6. **Guardrail** enforces materiality thresholds
+7. **Compliance Scribe** compiles audit binder
+
+**Outputs:**
+- `Close_Status.xlsx` (Day-3 checklist)
+- `Auto_Recs.xlsx` (bank, AR/AP reconciliations)
+- `GM_Bridge_BU_SKU.xlsx` (margin waterfalls)
+- `Forecast_Rolling.xlsx` (12-month forecast)
+- `Audit_Binder.zip` (evidence bundle)
+
+**SLOs:** Day-3 close achieved; ≥80% recs auto-cleared; ≥95% GM variance explained
+
+---
+
+### Workflow 2: Cash Control (Weekly)
+
+**Upload:**
+- `BankStatement_Week12.csv`
+- `AP_OpenItems_Week12.xlsx`
+- `AR_OpenItems_Week12.xlsx`
+- `Payments_Executed_Week12.csv`
+
+**Agent Execution:**
+1. **DQ Validation** checks positive pay, duplicate payments
+2. **Cash Commander** creates 13-week forecast with Monte Carlo confidence intervals
+3. **Receivables Radar** scores invoices by collection risk
+4. **Payables Protector** detects duplicates, calculates early-pay ROI
+5. **Covenant Keeper** checks debt covenant headroom
+6. **Guardrail** validates treasury limits, SoD on payments
+7. **Critic** compares to prior forecast, explains variances
+
+**Outputs:**
+- `Cash_Ladder.xlsx` (13-week forecast)
+- `Liquidity_Warnings.pdf` (covenant alerts)
+- `Collections_Prioritized.xlsx` (AR risk scores)
+- `Duplicates_Flagged.xlsx` (payment duplicates)
+
+**SLOs:** T+1 bank rec ≥99%; duplicate detection ≥95% precision; cash MAPE ≤10% @ 2-week
+
+---
+
+### Workflow 3: Capital Allocation (Quarterly)
+
+**Upload:**
+- `Project_Cases.xlsx` (cashflows, risks, synergies)
+- `WACC_Policy.xlsx` (cost of capital by division)
+- `Capacity_Constraints.xlsx` (budget, resources, gates)
+
+**Agent Execution:**
+1. **DQ Validation** checks NPV inputs, discount rates
+2. **Portfolio Allocator** ranks projects by EVA/NPV/IRR
+3. **Critic** validates DCF assumptions, runs sensitivity
+4. **Guardrail** applies policy gates (hurdle rates, payback limits)
+5. **Deal Diligence** (if M&A) triangulates valuation
+6. **Compliance Scribe** logs ranking decisions, policy versions
+
+**Outputs:**
+- `Portfolio_Ranked.xlsx` (EVA-ranked projects)
+- `Investment_Memos.docx` (one-pagers per project)
+- `Sensitivity_Tornado.xlsx` (risk analysis)
+
+**SLOs:** 100% projects policy-compliant; EVA/NPV/IRR + downside case
+
+---
 
 ## 🧪 Testing
 
 ### Run Backend Tests
 ```bash
 cd backend
-./test.sh                    # Run all tests with coverage
-./test.sh -v                 # Verbose output
-./test.sh -k "test_name"     # Run specific test
+./test.sh                 # All tests with coverage
+./test.sh -v              # Verbose output
+./test.sh -k test_agent   # Run specific test
 ```
+
+**Coverage target:** 70%+
 
 ### Run Frontend Tests
 ```bash
 cd frontend
-./test.sh                    # Run all tests with coverage
-npm run test:watch           # Watch mode for development
+./test.sh                 # All tests with coverage
+npm run test:watch        # Watch mode for development
 ```
 
-**Coverage Goals:** Both frontend and backend target 70%+ test coverage.
+**Coverage target:** 70%+
 
-## 🔧 Common Tasks
-
-### Add a New API Endpoint
-
-1. Create route handler in `backend/app/api/your_route.py`
-2. Define Pydantic schemas in `backend/app/schemas/your_schema.py`
-3. Add business logic in `backend/app/services/your_service.py`
-4. Register route in `backend/app/main.py`
-5. Write tests in `backend/tests/test_your_route.py`
-
-### Add a New Frontend Page
-
-1. Create page component in `frontend/src/pages/YourPage.tsx`
-2. Add route in `frontend/src/App.tsx`
-3. Create service methods in `frontend/src/services/yourService.ts`
-4. Define TypeScript types in `frontend/src/types/index.ts`
-5. Write tests in `frontend/tests/pages/YourPage.test.tsx`
-
-### Database Migrations
-
-```bash
-cd backend
-
-# Create a new migration
-./migrate.sh create "add new table"
-
-# Apply migrations
-./migrate.sh upgrade
-
-# Rollback last migration
-./migrate.sh downgrade
-
-# View migration history
-./migrate.sh history
-```
+---
 
 ## 🔐 Security Features
 
-- ✅ JWT token-based authentication
-- ✅ bcrypt password hashing
-- ✅ CORS middleware configured
-- ✅ Environment variables for secrets
-- ✅ SQL injection prevention (ORM)
-- ✅ Input validation (Pydantic + client-side)
-- ✅ Protected routes
-- ⚠️ **IMPORTANT:** Change `SECRET_KEY` before deploying to production
-- ⚠️ **IMPORTANT:** Use HTTPS in production
-- ⚠️ **IMPORTANT:** Configure CORS allowed origins for production
+### Data Protection
+- **TLS 1.3** for all API traffic
+- **At-rest encryption** (Supabase default)
+- **JWT authentication** with bcrypt password hashing
+- **Tenant isolation** via PostgreSQL row-level security
 
-## 📦 Available API Endpoints
+### Audit & Compliance
+- **Immutable audit log** (append-only table)
+- **Full dataset lineage** (input → processing → output)
+- **Approval history** with timestamps and rationale
+- **Policy version tracking** (effective dates)
 
-### Public Endpoints
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login and receive JWT token
-- `GET /health` - Health check
+### Spreadsheet Risk Mitigation
+- **Workbook Auditor** scans all uploads for:
+  - Macros (stripped by default)
+  - External links (flagged)
+  - Hidden sheets (reported)
+  - Volatile formulas (NOW(), RAND())
+- High-risk workbooks **quarantined** from payment flows
 
-### Protected Endpoints (Require Authentication)
-- `GET /api/users/profile` - Get current user profile
-- `GET /api/dashboard` - Get dashboard data
+### Policy-as-Code
+- **Materiality thresholds** enforced by Guardrail
+- **Segregation of Duties (SoD)** violations detected
+- **Treasury limits** validated (min cash, max exposure)
+- **Disclosure gates** applied per policy pack
 
-See full API documentation at http://localhost:8000/docs when running locally.
+---
+
+## 📊 Success Metrics
+
+### Technical SLOs
+- **Ingestion latency:** ≤10 min per 100MB file
+- **Mapping reuse:** ≥90% after first cycle
+- **Day-3 close:** Achieved for 2+ consecutive months
+- **Bank reconciliation:** T+1 coverage ≥99%
+- **Duplicate detection:** ≥95% precision, ≥85% recall
+- **Control logging:** 100% actions logged
+
+### Agent Performance
+- **Cash forecast MAPE:** ≤10% @ 2-week horizon
+- **Revenue forecast MAPE:** ≤8% @ 90-day horizon
+- **Margin bridge:** ≥95% of GM delta explained
+- **Auto-rec clearance:** ≥80% of reconciliations
+
+### User Experience
+- **Upload-to-insight:** ≤30 min median
+- **Exception resolution:** ≤24 hrs P50
+- **User satisfaction:** ≥4.0/5.0
+
+---
+
+## 🛠️ Configuration
+
+### Environment Variables (Backend)
+
+**Required:**
+```env
+# Database
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+
+# OpenRouter (LLMs)
+OPENROUTER_API_KEY=your-openrouter-api-key
+OPENROUTER_DEFAULT_MODEL=openai/gpt-4-turbo
+
+# Redis (Celery)
+REDIS_URL=redis://localhost:6379/0
+
+# Security
+SECRET_KEY=your-secret-key-change-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# ChromaDB
+CHROMA_PERSIST_DIRECTORY=/var/agenticcfo/chroma
+
+# File Storage
+ARTIFACTS_STORAGE_PATH=/var/agenticcfo/artifacts
+MAX_UPLOAD_SIZE_MB=500
+```
+
+**Optional:**
+```env
+# LangSmith (debugging)
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY=your-langsmith-api-key
+LANGCHAIN_PROJECT=agenticcfo
+
+# Supabase (if using for caching)
+SUPABASE_URL=your-supabase-url
+SUPABASE_KEY=your-supabase-key
+
+# Sentry (error tracking)
+SENTRY_DSN=your-sentry-dsn
+
+# CORS
+CORS_ORIGINS=http://localhost:5173,https://yourdomain.com
+```
+
+### Environment Variables (Frontend)
+
+```env
+VITE_API_BASE_URL=http://localhost:8000  # Backend URL
+```
+
+---
 
 ## 🚢 Deployment
 
@@ -269,9 +535,11 @@ See full API documentation at http://localhost:8000/docs when running locally.
 
 **Environment Setup:**
 1. Set all required environment variables
-2. Change `SECRET_KEY` to a secure random value
-3. Update `DATABASE_URL` to production database
-4. Configure CORS allowed origins
+2. Change `SECRET_KEY` to a secure random value: `openssl rand -hex 32`
+3. Update `DATABASE_URL` to production database (Supabase hosted)
+4. Configure `CORS_ORIGINS` for your frontend domain
+5. Set `OPENROUTER_API_KEY` for LLM access
+6. Set `REDIS_URL` for Celery task queue
 
 **Run Migrations:**
 ```bash
@@ -280,58 +548,79 @@ See full API documentation at http://localhost:8000/docs when running locally.
 
 **Production Server:**
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+# Option 1: Uvicorn (single worker)
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# Option 2: Gunicorn with Uvicorn workers (recommended)
+gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
-**Recommended Platforms:** Railway, Render, Fly.io, AWS, GCP, Azure
+**Celery Workers (async agents):**
+```bash
+celery -A app.tasks.celery_app worker --loglevel=info --concurrency=4
+```
+
+**Recommended Platforms:** Railway, Render, Fly.io, AWS ECS, GCP Cloud Run
+
+---
 
 ### Frontend Deployment
 
 **Build for Production:**
 ```bash
 cd frontend
-npm run build
+npm run build  # Creates dist/ folder
 ```
 
-**Deploy the `dist/` folder to:**
-- Vercel
-- Netlify
-- Cloudflare Pages
-- AWS S3 + CloudFront
-- Any static hosting service
+**Deploy `dist/` folder to:**
+- **Vercel:** Zero-config deployment
+- **Netlify:** Drag-drop or CLI
+- **Cloudflare Pages:** Fast global CDN
+- **AWS S3 + CloudFront:** S3 static hosting + CDN
 
 **Environment Variables:**
-Set `VITE_API_BASE_URL` to your production API URL.
+Set `VITE_API_BASE_URL` to your production backend URL.
 
-## 🛠️ Customization
+---
 
-This is a template—make it your own! Here are some ideas:
+## 📚 Documentation
 
-- **Replace Authentication:** Swap JWT for OAuth, Auth0, or Firebase Auth
-- **Add Features:** Payments (Stripe), email (SendGrid), file uploads (S3)
-- **Change Database:** Switch from PostgreSQL to MySQL, MongoDB, etc.
-- **Styling:** Replace Tailwind with styled-components, Emotion, or plain CSS
-- **State Management:** Add Redux, Zustand, or Jotai if needed
-- **API:** Convert to GraphQL, tRPC, or WebSockets
+- **[Architecture](docs/architecture.md)** - Comprehensive technical design (recommended read!)
+- **[Database Schema](docs/database-schema.md)** - Database tables and relationships
+- **[API Examples](docs/api-examples.md)** - API endpoint usage examples
+- **[Setup Guide](SETUP.md)** - Quick 5-minute setup instructions
+- **[Project Summary](PROJECT_SUMMARY.md)** - High-level project overview
 
-## 📚 Additional Documentation
-
-- [Architecture Details](docs/architecture.md)
-- [Database Schema](docs/database-schema.md)
-- [API Examples](docs/api-examples.md)
+---
 
 ## 🐛 Troubleshooting
 
 ### Backend Issues
 
-**Database connection errors:**
+**Database connection failed:**
 - Verify `DATABASE_URL` in `backend/.env`
-- Check database is running and accessible
-- Ensure IP is whitelisted (if using Supabase)
+- Check Supabase project is active
+- Ensure IP whitelisted in Supabase settings
 
 **Import errors:**
-- Activate virtual environment: `source venv/bin/activate`
-- Reinstall dependencies: `pip install -r requirements.txt`
+```bash
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Redis connection failed:**
+```bash
+# Start Redis locally
+redis-server
+
+# Or use Redis Cloud URL in .env
+```
+
+**OpenRouter API errors:**
+- Verify `OPENROUTER_API_KEY` is set correctly
+- Check API credits at [openrouter.ai](https://openrouter.ai)
+- Review rate limits for your models
 
 ### Frontend Issues
 
@@ -341,39 +630,101 @@ This is a template—make it your own! Here are some ideas:
 - Look for CORS errors in browser console
 
 **Build errors:**
-- Delete `node_modules/` and reinstall: `rm -rf node_modules && npm install`
-- Clear cache: `npm cache clean --force`
-- Verify Node.js version: `node --version` (should be 18+)
+```bash
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Agent Issues
+
+**LangGraph execution hangs:**
+- Check Celery worker is running
+- Review Redis connection
+- Check LangSmith traces (if enabled)
+
+**Low confidence scores:**
+- Review agent reasoning traces in work order logs
+- Validate input data quality (DQ reports)
+- Check if policy constraints are too strict
+
+---
 
 ## 🤝 Contributing
 
-This is a template repository. Feel free to fork it and customize for your needs!
+This project is under active development. Contributions welcome!
 
-If you find bugs or have suggestions for the template itself, please open an issue.
+**Areas for contribution:**
+- Additional industry agents (Manufacturing, Healthcare)
+- New template definitions (Payroll, Inventory)
+- Frontend UI/UX improvements
+- Documentation and examples
+- Test coverage expansion
+
+---
 
 ## 📄 License
 
 MIT License - Free to use for personal and commercial projects.
 
-## ⭐ Getting Started Tips
-
-1. **Start Simple:** Get the template running first before making changes
-2. **Customize Gradually:** Change one thing at a time
-3. **Read the Docs:** Check the `docs/` folder for more details
-4. **Use the Tests:** Run tests frequently to catch issues early
-5. **Environment Variables:** Never commit `.env` files to git
+---
 
 ## 🎉 What to Build?
 
-This template is perfect for:
+This platform is perfect for:
 
-- SaaS applications
-- Internal tools and dashboards
-- MVPs and prototypes
-- API-driven applications
-- Portfolio projects
-- Learning full-stack development
+- **CFO offices** looking to automate financial analysis
+- **Finance teams** needing fast close and rolling forecasts
+- **Treasury departments** managing cash and covenants
+- **FP&A analysts** running scenarios and capital allocation
+- **Controllers** seeking audit-ready evidence
+- **Retail finance** teams optimizing GMROI and promotions
+- **Energy finance** managing hedge strategies and production economics
 
 ---
 
-**Ready to build something awesome? Start coding! 🚀**
+## 🌟 Key Differentiators
+
+1. **Excel-First, Not API-First**
+   - No mandatory system integrations
+   - Works with files you already export
+   - Mapping memory learns your column names
+
+2. **Agentic, Not Rule-Based**
+   - 30+ specialized AI agents (not static dashboards)
+   - Explains variances, recommends actions
+   - Adapts to your data patterns
+
+3. **Controls-First, Not Data-First**
+   - Policy-as-code guardrails
+   - Immutable audit logs
+   - Human-above-the-loop approvals
+
+4. **Industry-Specific, Not Generic**
+   - Retail pack (GMROI, promo ROI, assortment)
+   - Energy pack (CFaR, hedge strategy, emissions)
+   - More industries coming (Manufacturing, Healthcare)
+
+---
+
+## 📞 Support
+
+For questions, issues, or feature requests:
+- **GitHub Issues:** [github.com/yourrepo/AgenticCFO/issues](https://github.com/yourrepo/AgenticCFO/issues)
+- **Email:** support@agenticcfo.com
+- **Docs:** [docs.agenticcfo.com](https://docs.agenticcfo.com)
+
+---
+
+## 🚀 Ready to Build?
+
+```bash
+# Clone and run in 5 minutes
+git clone https://github.com/yourrepo/AgenticCFO.git
+cd AgenticCFO
+./run.sh
+```
+
+**Start coding!**
+
+Upload your first Excel file and watch agents transform it into insights. 📊
