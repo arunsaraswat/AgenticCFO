@@ -27,6 +27,17 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = Field(default=30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
     cors_origins: str = Field(default="http://localhost:5173", env="CORS_ORIGINS")
 
+    # File storage settings
+    upload_dir: str = Field(default="/tmp/agenticcfo/uploads", env="UPLOAD_DIR")
+    artifacts_dir: str = Field(default="/tmp/agenticcfo/artifacts", env="ARTIFACTS_DIR")
+    max_upload_size_mb: int = Field(default=100, env="MAX_UPLOAD_SIZE_MB")
+
+    # LLM settings (for Phase 2, but defining now)
+    openrouter_api_key: str = Field(default="", env="OPENROUTER_API_KEY")
+    openrouter_default_model: str = Field(
+        default="openai/gpt-4-turbo", env="OPENROUTER_DEFAULT_MODEL"
+    )
+
     class Config:
         env_file = ".env"
         case_sensitive = False

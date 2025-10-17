@@ -6,6 +6,20 @@
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Python](https://img.shields.io/badge/python-3.11+-blue)]()
 [![React](https://img.shields.io/badge/react-18+-61DAFB)]()
+[![Build Status](https://img.shields.io/badge/build-MVP_phase-yellow)]()
+
+---
+
+## 📚 Documentation & Planning
+
+- **[Implementation Plan](./docs/implementation-plan.md)** - Complete 22-week roadmap (MVP + Full Build)
+- **[MVP Roadmap](./docs/mvp-roadmap.md)** - 2-week MVP quick reference guide
+- **[Progress Tracker](./PROGRESS.md)** - Current build status and metrics
+- **[Architecture Deep-Dive](./docs/architecture.md)** - Comprehensive technical design
+- **[Database Schema](./docs/database-schema.md)** - Full schema documentation
+- **[Development Guide](./CLAUDE.md)** - Setup, patterns, and best practices
+
+**Current Status:** 🟡 MVP Phase - Database foundation complete, building file upload system
 
 ---
 

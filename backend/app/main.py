@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import auth, users, dashboard
+from app.api import auth, intake, users, dashboard
 
 # Create FastAPI application
 app = FastAPI(
@@ -25,6 +25,7 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(auth.router, prefix="/api")
+app.include_router(intake.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 
