@@ -4,7 +4,59 @@ This directory contains custom slash commands that invoke specialized Claude Cod
 
 ## Available Agents
 
-### 1. Architect Review Agent (`/architect-review`)
+### 1. UX Review Agent (`/ux-review`)
+
+**Purpose:** Reviews frontend code for UX/UI best practices, design system compliance, and accessibility.
+
+**When to Use:**
+- Before committing new frontend components
+- After implementing dashboard features
+- Before pull requests involving UI changes
+- When unsure about design decisions
+- To ensure consistency across the platform
+
+**What It Reviews:**
+- ✅ Visual design (color palette, typography, spacing)
+- ✅ Component patterns (KPI cards, charts, tables, filters)
+- ✅ Interaction design (hover, active, disabled states)
+- ✅ Responsive design (mobile, tablet, desktop)
+- ✅ Accessibility (WCAG 2.1 AA compliance)
+- ✅ Performance (rendering, bundle size, lazy loading)
+- ✅ Design system alignment (based on reference dashboards)
+
+**Usage:**
+```bash
+# Review all frontend files
+/ux-review
+
+# Review specific component
+/ux-review src/components/Dashboard.tsx
+
+# Focus on accessibility
+/ux-review --accessibility
+
+# Focus on mobile responsiveness
+/ux-review --mobile
+```
+
+**Example Output:**
+- Overall assessment (Good / Needs Work / Poor)
+- Categorized issues (Critical 🔴 / Major 🟡 / Minor 🟢)
+- Specific fixes with code examples
+- Best practices applied
+- Suggested enhancements
+- Prioritized next steps with time estimates
+
+**Design System Reference:**
+- **Guidelines:** `.claude/UX_DESIGN_GUIDELINES.md`
+- **Sample Review:** `.claude/SAMPLE_UX_REVIEW.md`
+- **Color Palette:** Blues (#1F4E78, #4472C4, #8AB4F8) + semantic colors
+- **Typography:** 48/24/16/14/12/10px scale
+- **Spacing:** 8px grid system
+
+---
+
+### 2. Architect Review Agent (`/architect-review`)
 
 **Purpose:** Reviews code for architectural alignment, best practices, and design patterns.
 
@@ -42,7 +94,7 @@ This directory contains custom slash commands that invoke specialized Claude Cod
 
 ---
 
-### 2. Tester Review Agent (`/tester-review`)
+### 3. Tester Review Agent (`/tester-review`)
 
 **Purpose:** Analyzes test coverage and identifies missing test cases for all code.
 
@@ -101,6 +153,7 @@ These are **Claude Code slash commands** that provide specialized prompts to Cla
 
 ### Recommended Development Flow
 
+**Backend Development:**
 ```bash
 # 1. Implement new feature
 # Edit files in backend/app/api/, backend/app/services/, etc.
@@ -123,6 +176,29 @@ pytest --cov=app --cov-report=term-missing
 # 6. Commit changes
 git add .
 git commit -m "Add new feature with comprehensive tests"
+```
+
+**Frontend Development:**
+```bash
+# 1. Implement new component
+# Edit files in frontend/src/components/, etc.
+
+# 2. Run UX review
+/ux-review
+# Fix any critical/major issues found
+
+# 3. Test manually
+# - Check mobile responsiveness
+# - Test keyboard navigation
+# - Verify color contrast
+
+# 4. Run frontend tests
+cd frontend
+./test.sh
+
+# 5. Commit changes
+git add .
+git commit -m "Add dashboard component with UX polish"
 ```
 
 ### Example: Adding a New API Endpoint
@@ -220,6 +296,7 @@ If the agents provide unclear feedback or miss important issues:
 ## Version
 
 - **Created:** October 2025
+- **UX Review Agent:** v1.0 (2025-10-17)
 - **Architect Agent:** v1.0
 - **Tester Agent:** v1.0
 - **Maintained by:** Agentic CFO Platform Team

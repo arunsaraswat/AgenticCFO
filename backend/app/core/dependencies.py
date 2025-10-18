@@ -25,3 +25,7 @@ def get_authenticated_user() -> User:
         Current authenticated user
     """
     return Depends(get_current_active_user)
+
+
+# Alias for compatibility
+get_current_user = get_authenticated_user

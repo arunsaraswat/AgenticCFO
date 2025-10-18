@@ -4,12 +4,14 @@ from uuid import UUID
 import json
 import pandas as pd
 from datetime import datetime, timedelta
+import os
 
 from langchain.tools import Tool
 from sqlalchemy.orm import Session
 
 from app.agents.base import BaseFinanceAgent
 from app.services.dataset_service import DatasetService
+from app.artifacts.excel_generator import generate_cash_ladder
 
 
 class CashCommanderAgent(BaseFinanceAgent):
@@ -270,13 +272,42 @@ Always explain your reasoning and show your calculations.
 
     async def _generate_artifacts(self, parsed_output: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate Cash Ladder Excel artifact."""
-        # For now, return placeholder
-        # Will implement full Excel generation in next step
-        return [
-            {
-                "artifact_type": "excel",
-                "filename": "Cash_Ladder.xlsx",
-                "description": "13-week cash forecast",
-                "status": "pending_generation"
+        try:
+            # Get artifact output directory from env or use default
+            output_dir = os.getenv("ARTIFACTS_STORAGE_PATH", "/tmp/artifacts")
+
+            # Extract data for Excel generation
+            current_cash = parsed_output.get("current_cash_position", 0)
+            forecast_data = parsed_output.get("forecast", None)
+            liquidity_warnings = parsed_output.get("liquidity_warnings", [])
+            recommendations = parsed_output.get("recommendations", [])
+
+            # Add metadata
+            metadata = {
+                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "agent": "cash_commander",
+                "tenant_name": "Demo Tenant",  # TODO: Get from context
             }
-        ]
+
+            # Generate Excel file
+            artifact_info = generate_cash_ladder(
+                current_cash=current_cash,
+                forecast_data=forecast_data,
+                liquidity_warnings=liquidity_warnings,
+                recommendations=recommendations,
+                metadata=metadata,
+                output_dir=output_dir,
+            )
+
+            return [artifact_info]
+
+        except Exception as e:
+            # Return error artifact if generation fails
+            return [
+                {
+                    "artifact_type": "error",
+                    "filename": "cash_ladder_error.txt",
+                    "description": f"Failed to generate Cash Ladder: {str(e)}",
+                    "error": str(e),
+                }
+            ]
