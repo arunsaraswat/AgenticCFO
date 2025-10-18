@@ -106,10 +106,10 @@ class WorkOrder(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     completed_at = Column(DateTime, nullable=True)
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="work_orders")
-    artifacts = relationship("Artifact", back_populates="work_order", cascade="all, delete-orphan")
-    audit_events = relationship("AuditEvent", back_populates="work_order", cascade="all, delete-orphan")
+    # Relationships (commented out to avoid circular imports)
+    # tenant = relationship("Tenant", back_populates="work_orders")
+    # artifacts = relationship("Artifact", back_populates="work_order", cascade="all, delete-orphan")
+    # audit_events = relationship("AuditEvent", back_populates="work_order", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         """String representation of WorkOrder."""

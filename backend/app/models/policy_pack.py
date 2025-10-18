@@ -69,8 +69,8 @@ class PolicyPack(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="policy_packs")
+    # Relationships (Tenant relationship commented out to avoid circular import)
+    # tenant = relationship("Tenant", back_populates="policy_packs")
 
     def __repr__(self) -> str:
         """String representation of PolicyPack."""

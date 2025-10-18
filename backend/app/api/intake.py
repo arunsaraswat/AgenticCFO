@@ -379,9 +379,23 @@ async def upload_file(
             except Exception:
                 pass  # Cleanup or audit logging failed, but log the original error
 
+        # Import settings to check if we should show detailed errors
+        import traceback
+
+        # Log the full error for debugging
+        print(f"Upload error: {str(e)}")
+        print(traceback.format_exc())
+
+        # In debug mode, return detailed error; in production, return generic message
+        error_detail = (
+            f"File upload failed: {str(e)}"
+            if settings.debug
+            else "File upload failed due to an unexpected error. Please contact support."
+        )
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"File upload failed due to an unexpected error. Please contact support.",
+            detail=error_detail,
         )
 
 

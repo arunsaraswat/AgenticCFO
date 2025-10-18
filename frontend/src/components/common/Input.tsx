@@ -7,6 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   helperText?: string;
+  disablePasswordManager?: boolean;
 }
 
 /**
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   helperText,
   className = '',
   id,
+  disablePasswordManager = false,
   ...props
 }) => {
   const inputId = id || `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
@@ -42,6 +44,7 @@ const Input: React.FC<InputProps> = ({
           }
           ${className}
         `}
+        {...(disablePasswordManager ? { 'data-lpignore': 'true', 'data-form-type': 'other' } : {})}
         {...props}
       />
       {hasError && (

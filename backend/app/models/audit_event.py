@@ -74,9 +74,9 @@ class AuditEvent(Base):
     user_agent = Column(String(500), nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="audit_events")
-    work_order = relationship("WorkOrder", back_populates="audit_events")
+    # Relationships (commented out to avoid circular imports)
+    # tenant = relationship("Tenant", back_populates="audit_events")
+    # work_order = relationship("WorkOrder", back_populates="audit_events")
 
     def __repr__(self) -> str:
         """String representation of AuditEvent."""

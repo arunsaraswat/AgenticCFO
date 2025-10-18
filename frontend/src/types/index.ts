@@ -83,3 +83,45 @@ export interface AuthContextValue {
   register: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => void;
 }
+
+/**
+ * Work Order status types.
+ */
+export type WorkOrderStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+/**
+ * Work Order interface.
+ */
+export interface WorkOrder {
+  id: string;
+  objective: string;
+  status: WorkOrderStatus;
+  created_at: string;
+  updated_at: string;
+  input_datasets?: string[];
+  agent_outputs?: Record<string, any>;
+  artifacts?: Artifact[];
+}
+
+/**
+ * Artifact interface.
+ */
+export interface Artifact {
+  id: string;
+  work_order_id: string;
+  artifact_type: string;
+  file_path: string;
+  file_name: string;
+  created_at: string;
+  file_size?: number;
+}
+
+/**
+ * File upload response.
+ */
+export interface FileUploadResponse {
+  file_id: string;
+  filename: string;
+  file_hash: string;
+  message: string;
+}

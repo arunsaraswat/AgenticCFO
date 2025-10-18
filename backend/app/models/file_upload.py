@@ -58,8 +58,8 @@ class FileUpload(Base):
     uploaded_by_user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="file_uploads")
+    # Relationships (Tenant relationship commented out to avoid circular import)
+    # tenant = relationship("Tenant", back_populates="file_uploads")
     datasets = relationship("Dataset", back_populates="file_upload", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:

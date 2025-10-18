@@ -46,8 +46,8 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="users")
+    # Relationships (commented out to avoid circular import issues)
+    # tenant = relationship("Tenant", back_populates="users")
 
     def __repr__(self) -> str:
         """String representation of User."""

@@ -73,8 +73,8 @@ class Dataset(Base):
         UniqueConstraint("tenant_id", "template_type", "entity", "period_start", "version", name="uq_dataset_version"),
     )
 
-    # Relationships
-    tenant = relationship("Tenant", back_populates="datasets")
+    # Relationships (Tenant relationship commented out to avoid circular import)
+    # tenant = relationship("Tenant", back_populates="datasets")
     file_upload = relationship("FileUpload", back_populates="datasets")
     mapping_config = relationship("MappingConfig", back_populates="datasets")
 

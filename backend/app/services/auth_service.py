@@ -78,6 +78,8 @@ class AuthService:
             email=user_data.email,
             full_name=user_data.full_name,
             hashed_password=hashed_password,
+            tenant_id=1,  # Default tenant
+            approval_authority=0,  # Default approval limit
             is_active=True,
             is_superuser=False
         )

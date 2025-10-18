@@ -3,7 +3,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import auth, intake, users, dashboard, agents
+from app.api import auth, intake, users, dashboard, agents, work_orders
+
+# Import all models to register them with SQLAlchemy
+# This ensures foreign key relationships can be resolved at runtime
+from app.models import (
+    Tenant, User, FileUpload, Dataset, MappingConfig,
+    PolicyPack, WorkOrder, AuditEvent, Artifact
+)
 
 # Create FastAPI application
 app = FastAPI(
@@ -15,9 +22,10 @@ app = FastAPI(
 )
 
 # Configure CORS middleware
+# Allow requests from frontend during development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Explicit origins for dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,6 +37,7 @@ app.include_router(intake.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(agents.router, prefix="/api")
+app.include_router(work_orders.router, prefix="/api")
 
 
 @app.get("/")
@@ -48,4 +57,13 @@ async def health_check():
     return {
         "status": "healthy",
         "app_name": settings.app_name
+    }
+
+
+@app.get("/api/test-cors")
+async def test_cors():
+    """Test CORS configuration."""
+    return {
+        "message": "CORS is working!",
+        "cors_enabled": True
     }

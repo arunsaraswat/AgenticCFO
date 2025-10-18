@@ -52,13 +52,13 @@ class Tenant(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Relationships
-    users = relationship("User", back_populates="tenant", cascade="all, delete-orphan")
-    file_uploads = relationship("FileUpload", back_populates="tenant", cascade="all, delete-orphan")
-    datasets = relationship("Dataset", back_populates="tenant", cascade="all, delete-orphan")
-    work_orders = relationship("WorkOrder", back_populates="tenant", cascade="all, delete-orphan")
-    policy_packs = relationship("PolicyPack", back_populates="tenant", cascade="all, delete-orphan")
-    audit_events = relationship("AuditEvent", back_populates="tenant", cascade="all, delete-orphan")
+    # Relationships (commented out to avoid circular import issues)
+    # users = relationship("User", back_populates="tenant", cascade="all, delete-orphan")
+    # file_uploads = relationship("FileUpload", back_populates="tenant", cascade="all, delete-orphan")
+    # datasets = relationship("Dataset", back_populates="tenant", cascade="all, delete-orphan")
+    # work_orders = relationship("WorkOrder", back_populates="tenant", cascade="all, delete-orphan")
+    # policy_packs = relationship("PolicyPack", back_populates="tenant", cascade="all, delete-orphan")
+    # audit_events = relationship("AuditEvent", back_populates="tenant", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         """String representation of Tenant."""

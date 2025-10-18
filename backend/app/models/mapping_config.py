@@ -65,8 +65,8 @@ class MappingConfig(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Relationships
-    tenant = relationship("Tenant")
+    # Relationships (Tenant relationship commented out to avoid circular import)
+    # tenant = relationship("Tenant")
     datasets = relationship("Dataset", back_populates="mapping_config")
 
     def __repr__(self) -> str:

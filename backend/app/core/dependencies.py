@@ -17,14 +17,21 @@ def get_db_session() -> Session:
     return Depends(get_db)
 
 
-def get_authenticated_user() -> User:
+async def get_authenticated_user(
+    current_user: User = Depends(get_current_active_user)
+) -> User:
     """
     Get authenticated user dependency.
 
+    This is a convenience wrapper that returns the authenticated user directly.
+
+    Args:
+        current_user: Current authenticated user from get_current_active_user
+
     Returns:
-        Current authenticated user
+        Current authenticated user with tenant_id available
     """
-    return Depends(get_current_active_user)
+    return current_user
 
 
 # Alias for compatibility
