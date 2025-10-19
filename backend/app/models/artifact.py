@@ -64,8 +64,8 @@ class Artifact(Base):
     generated_by_agent = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
-    # Relationships
-    work_order = relationship("WorkOrder", back_populates="artifacts")
+    # Relationships (commented out to avoid circular imports - WorkOrder.artifacts is JSONB)
+    # work_order = relationship("WorkOrder", back_populates="artifact_records")
 
     def __repr__(self) -> str:
         """String representation of Artifact."""

@@ -66,6 +66,7 @@ class Dataset(Base):
     row_count = Column(Integer, nullable=True)
     column_count = Column(Integer, nullable=True)
     dataset_metadata = Column(JSONB, nullable=False, default=dict)
+    data_snapshot = Column(JSONB, nullable=True)  # Stores the actual parsed data as JSON (DataFrame.to_json())
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
     # Unique constraint for versioning

@@ -21,6 +21,7 @@ from app.schemas.file_upload import FileUploadResponse, FileUploadUpdate
 from app.services.audit_service import AuditService
 from app.services.dataset_service import DatasetService
 from app.services.file_service import FileUploadService
+from app.services.work_order_service import WorkOrderService
 
 router = APIRouter(prefix="/intake", tags=["File Intake"])
 
@@ -86,6 +87,8 @@ async def upload_file(
 
     file_upload = None
     file_path_for_cleanup = None
+    dataset = None
+    work_order = None
 
     # Extract client info for audit logging
     client_ip = request.client.host if request.client else None
@@ -155,6 +158,34 @@ async def upload_file(
                         checks=dataset.dq_results.get("checks", {}),
                     )
 
+                # Auto-create work order for Cash Commander execution
+                # This connects the file upload to agent execution
+                try:
+                    work_order = WorkOrderService.create_work_order(
+                        db=db,
+                        tenant_id=current_user.tenant_id,
+                        objective="13-week cash forecast",
+                        input_datasets=[dataset.id],
+                        created_by_user_id=current_user.id,
+                        policy_refs=[]
+                    )
+
+                    # Audit Log: Work order created
+                    AuditService.log_audit_event(
+                        db=db,
+                        tenant_id=current_user.tenant_id,
+                        event_type="work_order_created",
+                        details={
+                            "work_order_id": work_order.id,
+                            "objective": work_order.objective,
+                            "dataset_id": dataset.id,
+                            "file_upload_id": file_upload.id,
+                        }
+                    )
+                except Exception as wo_error:
+                    # Log error but don't fail the upload
+                    print(f"Warning: Failed to create work order: {str(wo_error)}")
+
                 # Commit transaction on success
                 db.commit()
             else:
@@ -221,7 +252,15 @@ async def upload_file(
 
         # Refresh to get latest status
         db.refresh(file_upload)
-        return FileUploadResponse.model_validate(file_upload)
+
+        # Build response with work_order_id and dataset_id
+        response_data = FileUploadResponse.model_validate(file_upload)
+        if dataset:
+            response_data.dataset_id = dataset.id
+        if work_order:
+            response_data.work_order_id = work_order.id
+
+        return response_data
 
     except HTTPException:
         # Re-raise HTTP exceptions as-is

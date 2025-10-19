@@ -7,7 +7,7 @@ import { WorkOrder } from '@/types';
 import Header from '@/components/layout/Header';
 import FileUpload from '@/components/upload/FileUpload';
 import WorkOrderList from '@/components/work-orders/WorkOrderList';
-import ArtifactViewer from '@/components/work-orders/ArtifactViewer';
+import WorkOrderDetail from '@/components/work-orders/WorkOrderDetail';
 
 /**
  * Dashboard page with integrated file upload and work order tracking.
@@ -15,29 +15,45 @@ import ArtifactViewer from '@/components/work-orders/ArtifactViewer';
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<WorkOrder | null>(null);
+  const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<number | null>(null);
 
   /**
    * Handle file upload completion.
    */
-  const handleUploadComplete = (fileId: string, fileName: string) => {
-    console.log('File uploaded:', fileId, fileName);
+  const handleUploadComplete = (fileId: number, fileName: string, workOrderId?: number, datasetId?: number) => {
+    console.log('File uploaded:', { fileId, fileName, workOrderId, datasetId });
     // Trigger refresh of work orders list
     setRefreshTrigger((prev) => prev + 1);
+
+    // Auto-select the new work order
+    if (workOrderId) {
+      setSelectedWorkOrderId(workOrderId);
+    }
+  };
+
+  /**
+   * Handle work order created (after execution).
+   */
+  const handleWorkOrderCreated = (workOrderId: number) => {
+    console.log('Work order created/executed:', workOrderId);
+    // Trigger refresh to show updated status
+    setRefreshTrigger((prev) => prev + 1);
+    // Select the work order
+    setSelectedWorkOrderId(workOrderId);
   };
 
   /**
    * Handle work order selection.
    */
   const handleSelectWorkOrder = (workOrder: WorkOrder) => {
-    setSelectedWorkOrder(workOrder);
+    setSelectedWorkOrderId(workOrder.id);
   };
 
   /**
    * Close work order details.
    */
   const handleCloseDetails = () => {
-    setSelectedWorkOrder(null);
+    setSelectedWorkOrderId(null);
   };
 
   return (
@@ -65,24 +81,23 @@ const Dashboard: React.FC = () => {
               <p className="text-body text-cfo-neutral-medium mb-4">
                 Upload bank statements, trial balances, or other financial files for AI analysis
               </p>
-              <FileUpload onUploadComplete={handleUploadComplete} />
+              <FileUpload
+                onUploadComplete={handleUploadComplete}
+                onWorkOrderCreated={handleWorkOrderCreated}
+                showExecuteButton={true}
+              />
             </div>
           </div>
 
           {/* Right Column - Work Orders */}
           <div className="lg:col-span-2">
-            {selectedWorkOrder ? (
+            {selectedWorkOrderId ? (
               <div className="bg-white shadow-card rounded-card p-6">
                 {/* Work Order Details Header */}
                 <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h2 className="text-title text-cfo-neutral-dark">
-                      Work Order Details
-                    </h2>
-                    <p className="text-small text-cfo-neutral-medium mt-1">
-                      ID: {selectedWorkOrder.id}
-                    </p>
-                  </div>
+                  <h2 className="text-title text-cfo-neutral-dark">
+                    Work Order Details
+                  </h2>
                   <button
                     onClick={handleCloseDetails}
                     className="text-gray-400 hover:text-cfo-neutral-medium transition-colors duration-200 ease-cfo"
@@ -98,70 +113,8 @@ const Dashboard: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Work Order Information */}
-                <div className="bg-cfo-neutral-off-white rounded-card p-4 mb-6">
-                  <h3 className="text-small font-medium text-cfo-neutral-medium mb-2">Objective</h3>
-                  <p className="text-body text-cfo-neutral-dark">{selectedWorkOrder.objective || 'No objective specified'}</p>
-
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                      <h4 className="text-small font-medium text-cfo-neutral-medium">Status</h4>
-                      <p className="text-body text-cfo-neutral-dark capitalize">{selectedWorkOrder.status}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-small font-medium text-cfo-neutral-medium">Created</h4>
-                      <p className="text-body text-cfo-neutral-dark">
-                        {new Date(selectedWorkOrder.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Agent Outputs */}
-                {selectedWorkOrder.agent_outputs && Object.keys(selectedWorkOrder.agent_outputs).length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-section text-cfo-neutral-dark mb-3">Agent Analysis</h3>
-                    <div className="bg-cfo-blue-sky border border-cfo-blue-light rounded-card p-4">
-                      <pre className="text-small text-cfo-neutral-dark whitespace-pre-wrap font-mono">
-                        {JSON.stringify(selectedWorkOrder.agent_outputs, null, 2)}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-
-                {/* Artifacts */}
-                {selectedWorkOrder.artifacts && selectedWorkOrder.artifacts.length > 0 && (
-                  <ArtifactViewer artifacts={selectedWorkOrder.artifacts} />
-                )}
-
-                {/* No Results Yet */}
-                {selectedWorkOrder.status === 'processing' && (
-                  <div className="text-center py-8">
-                    <svg
-                      className="animate-spin h-12 w-12 text-cfo-blue-medium mx-auto mb-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    <h3 className="text-section text-cfo-neutral-dark">Processing...</h3>
-                    <p className="text-body text-cfo-neutral-medium mt-1">
-                      Your files are being analyzed. This may take a few minutes.
-                    </p>
-                  </div>
-                )}
+                {/* Work Order Detail Component */}
+                <WorkOrderDetail workOrderId={selectedWorkOrderId} autoRefresh={true} />
               </div>
             ) : (
               <div className="bg-white shadow-card rounded-card p-6">

@@ -72,19 +72,15 @@ class LLMConfig:
             model_id = cls.MODELS["gpt-3.5"]
 
         # Configure for OpenRouter
+        # Note: Removed headers from model_kwargs due to LangChain compatibility
+        # OpenRouter-specific headers can be added later via default_headers if needed
         return ChatOpenAI(
             model=model_id,
             openai_api_key=settings.openrouter_api_key,
             openai_api_base="https://openrouter.ai/api/v1",
             temperature=temperature,
             max_tokens=max_tokens,
-            model_kwargs={
-                "headers": {
-                    "HTTP-Referer": "https://agenticcfo.com",  # Optional, for rankings
-                    "X-Title": "Agentic CFO Platform",  # Optional, for rankings
-                },
-                **kwargs
-            }
+            **kwargs
         )
 
     @classmethod

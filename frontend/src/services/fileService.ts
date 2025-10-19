@@ -49,8 +49,18 @@ class FileService {
    * @param workOrderId - The work order ID
    * @returns Promise with work order details
    */
-  async getWorkOrder(workOrderId: string): Promise<WorkOrder> {
+  async getWorkOrder(workOrderId: number): Promise<WorkOrder> {
     const response = await apiClient.get<WorkOrder>(`/api/work-orders/${workOrderId}`);
+    return response.data;
+  }
+
+  /**
+   * Execute a work order (runs Cash Commander agent).
+   * @param workOrderId - The work order ID to execute
+   * @returns Promise with updated work order
+   */
+  async executeWorkOrder(workOrderId: number): Promise<WorkOrder> {
+    const response = await apiClient.post<WorkOrder>(`/api/work-orders/${workOrderId}/execute`);
     return response.data;
   }
 
@@ -60,7 +70,7 @@ class FileService {
    * @param fileIds - Array of uploaded file IDs
    * @returns Promise with created work order
    */
-  async createWorkOrder(objective: string, fileIds: string[]): Promise<WorkOrder> {
+  async createWorkOrder(objective: string, fileIds: number[]): Promise<WorkOrder> {
     const response = await apiClient.post<WorkOrder>('/api/work-orders', {
       objective,
       input_datasets: fileIds,
@@ -71,13 +81,23 @@ class FileService {
   /**
    * Download an artifact file.
    * @param artifactId - The artifact ID
+   * @param filename - Optional filename for download
    * @returns Promise with blob data
    */
-  async downloadArtifact(artifactId: string): Promise<Blob> {
+  async downloadArtifact(artifactId: number, filename?: string): Promise<void> {
     const response = await apiClient.get(`/api/artifacts/${artifactId}/download`, {
       responseType: 'blob',
     });
-    return response.data;
+
+    // Create download link
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename || `artifact_${artifactId}.xlsx`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
   }
 
   /**
@@ -85,8 +105,18 @@ class FileService {
    * @param artifactId - The artifact ID
    * @returns Promise with artifact details
    */
-  async getArtifact(artifactId: string): Promise<Artifact> {
+  async getArtifact(artifactId: number): Promise<Artifact> {
     const response = await apiClient.get<Artifact>(`/api/artifacts/${artifactId}`);
+    return response.data;
+  }
+
+  /**
+   * List all artifacts for a work order.
+   * @param workOrderId - The work order ID
+   * @returns Promise with array of artifacts
+   */
+  async getWorkOrderArtifacts(workOrderId: number): Promise<Artifact[]> {
+    const response = await apiClient.get<Artifact[]>(`/api/artifacts/work-order/${workOrderId}`);
     return response.data;
   }
 }

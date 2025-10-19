@@ -93,35 +93,70 @@ export type WorkOrderStatus = 'pending' | 'processing' | 'completed' | 'failed';
  * Work Order interface.
  */
 export interface WorkOrder {
-  id: string;
+  id: number;
+  tenant_id: number;
   objective: string;
   status: WorkOrderStatus;
+  progress_percentage: number;
+  current_agent?: string | null;
+  input_datasets: number[];
+  policy_refs: string[];
+  agent_outputs: Record<string, any>;
+  guardrail_checks: any[];
+  approval_gates: any[];
+  artifacts: ArtifactSummary[];
+  execution_log: any[];
+  error_message?: string | null;
+  total_cost_usd: number;
+  execution_time_seconds?: number | null;
+  created_by_user_id?: number | null;
   created_at: string;
   updated_at: string;
-  input_datasets?: string[];
-  agent_outputs?: Record<string, any>;
-  artifacts?: Artifact[];
+  completed_at?: string | null;
 }
 
 /**
- * Artifact interface.
+ * Artifact summary (simplified version stored in work order).
+ */
+export interface ArtifactSummary {
+  artifact_type: string;
+  artifact_name: string;
+  file_size_bytes: number;
+}
+
+/**
+ * Full artifact interface with all details.
  */
 export interface Artifact {
-  id: string;
-  work_order_id: string;
+  id: number;
+  work_order_id: number;
   artifact_type: string;
+  artifact_name: string;
   file_path: string;
-  file_name: string;
+  checksum_sha256: string;
+  file_size_bytes: number;
+  mime_type?: string | null;
+  artifact_metadata: Record<string, any>;
+  generated_by_agent?: string | null;
   created_at: string;
-  file_size?: number;
 }
 
 /**
  * File upload response.
  */
 export interface FileUploadResponse {
-  file_id: string;
+  id: number;
+  tenant_id: number;
   filename: string;
   file_hash: string;
-  message: string;
+  file_size_bytes: number;
+  mime_type?: string | null;
+  workbook_risk_score?: number | null;
+  security_scan_results?: any;
+  status: string;
+  error_message?: string | null;
+  uploaded_by_user_id?: number | null;
+  created_at: string;
+  work_order_id?: number | null;
+  dataset_id?: number | null;
 }

@@ -51,6 +51,7 @@ class DatasetService:
             row_count=dataset_data.row_count,
             column_count=dataset_data.column_count,
             dataset_metadata=dataset_data.dataset_metadata,
+            data_snapshot=dataset_data.data_snapshot,  # Store the parsed data JSON
             created_at=datetime.utcnow(),
         )
 
@@ -264,6 +265,7 @@ class DatasetService:
                     "column_mappings": column_mappings,
                     "source_columns": df.columns.tolist(),
                 },
+                data_snapshot=data_json,  # Store the parsed data as JSON
             )
 
             dataset = DatasetService.create_dataset(db, tenant_id, dataset_data)

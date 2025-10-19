@@ -23,6 +23,7 @@ class DatasetCreate(DatasetBase):
     row_count: Optional[int] = Field(None, gt=0, description="Number of rows")
     column_count: Optional[int] = Field(None, gt=0, description="Number of columns")
     dataset_metadata: dict = Field(default_factory=dict, description="Additional metadata")
+    data_snapshot: Optional[str] = Field(None, description="JSON snapshot of parsed data (DataFrame.to_json())")
 
 
 class DatasetUpdate(BaseModel):

@@ -166,36 +166,37 @@ class ExcelGenerator:
 
         last_data_row = row - 1
 
-        # Add totals row
-        row += 1
-        ws.cell(row=row, column=1, value="TOTAL")
-        ws.cell(row=row, column=1).font = Font(bold=True)
-        ws.cell(row=row, column=4, value=f"=SUM(D{first_data_row}:D{last_data_row})")
-        ws.cell(row=row, column=5, value=f"=SUM(E{first_data_row}:E{last_data_row})")
+        # Add totals row (only if we have data)
+        if forecast_data and len(forecast_data) > 0:
+            row += 1
+            ws.cell(row=row, column=1, value="TOTAL")
+            ws.cell(row=row, column=1).font = Font(bold=True)
+            ws.cell(row=row, column=4, value=f"=SUM(D{first_data_row}:D{last_data_row})")
+            ws.cell(row=row, column=5, value=f"=SUM(E{first_data_row}:E{last_data_row})")
 
-        # Format totals
-        for col in [4, 5]:
-            cell = ws.cell(row=row, column=col)
-            cell.number_format = "$#,##0.00"
-            cell.font = Font(bold=True)
-            cell.alignment = Alignment(horizontal="right")
-            cell.border = Border(
-                top=Side(style="double", color="000000"),
-                bottom=Side(style="double", color="000000"),
+            # Format totals
+            for col in [4, 5]:
+                cell = ws.cell(row=row, column=col)
+                cell.number_format = "$#,##0.00"
+                cell.font = Font(bold=True)
+                cell.alignment = Alignment(horizontal="right")
+                cell.border = Border(
+                    top=Side(style="double", color="000000"),
+                    bottom=Side(style="double", color="000000"),
+                )
+
+            # Add conditional formatting for low balances (< $500k)
+            low_balance_rule = CellIsRule(
+                operator="lessThan",
+                formula=["500000"],
+                stopIfTrue=True,
+                fill=PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid"),
+                font=Font(color="9C0006", bold=True),
             )
-
-        # Add conditional formatting for low balances (< $500k)
-        low_balance_rule = CellIsRule(
-            operator="lessThan",
-            formula=["500000"],
-            stopIfTrue=True,
-            fill=PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid"),
-            font=Font(color="9C0006", bold=True),
-        )
-        ws.conditional_formatting.add(
-            f"F{first_data_row}:F{last_data_row}",
-            low_balance_rule,
-        )
+            ws.conditional_formatting.add(
+                f"F{first_data_row}:F{last_data_row}",
+                low_balance_rule,
+            )
 
         # Liquidity warnings section
         if liquidity_warnings:

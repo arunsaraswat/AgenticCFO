@@ -8,6 +8,7 @@ from app.core.security import get_current_active_user
 from app.models.user import User
 from app.models.work_order import WorkOrder
 from app.schemas.work_order import WorkOrderResponse, WorkOrderCreate
+from app.services.work_order_service import WorkOrderService
 
 router = APIRouter(prefix="/work-orders", tags=["work-orders"])
 
@@ -100,3 +101,57 @@ async def create_work_order(
     db.refresh(work_order)
 
     return WorkOrderResponse.model_validate(work_order)
+
+
+@router.post("/{work_order_id}/execute", response_model=WorkOrderResponse)
+async def execute_work_order(
+    work_order_id: int,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+) -> WorkOrderResponse:
+    """
+    Execute a work order (runs Cash Commander agent).
+
+    This endpoint:
+    1. Fetches the work order and validates access
+    2. Retrieves input datasets
+    3. Executes Cash Commander agent
+    4. Generates artifacts (Excel Cash Ladder)
+    5. Updates work order with results
+
+    Args:
+        work_order_id: Work order ID to execute
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Updated work order with execution results and artifacts
+
+    Raises:
+        HTTPException 404: If work order not found
+        HTTPException 400: If work order is in invalid state
+        HTTPException 500: If agent execution fails
+    """
+    try:
+        # Execute Cash Commander agent
+        work_order = await WorkOrderService.execute_cash_commander(
+            db=db,
+            work_order_id=work_order_id,
+            tenant_id=current_user.tenant_id
+        )
+
+        return WorkOrderResponse.model_validate(work_order)
+
+    except ValueError as e:
+        # Work order not found or invalid state
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND if "not found" in str(e).lower() else status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+    except Exception as e:
+        # Agent execution failed
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Work order execution failed: {str(e)}"
+        )

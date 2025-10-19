@@ -5,9 +5,10 @@ from datetime import datetime
 import logging
 from uuid import UUID
 
-from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain.agents import AgentExecutor, create_react_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.tools import Tool
+from langchain import hub
 
 from app.agents.llm_config import LLMConfig
 
@@ -118,18 +119,37 @@ class BaseFinanceAgent(ABC):
         self.agent_executor = self._create_agent()
 
     def _create_agent(self) -> AgentExecutor:
-        """Create the LangChain agent executor."""
-        # Build prompt
+        """Create the LangChain agent executor using ReAct pattern."""
+        # Build prompt with ReAct format
         system_prompt = self.get_system_prompt()
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", system_prompt),
-            MessagesPlaceholder(variable_name="chat_history", optional=True),
-            ("human", "{input}"),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
-        ])
 
-        # Create agent
-        agent = create_openai_functions_agent(
+        # ReAct prompt template
+        template = f"""{system_prompt}
+
+You have access to the following tools:
+
+{{tools}}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{{tool_names}}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {{input}}
+Thought: {{agent_scratchpad}}"""
+
+        prompt = ChatPromptTemplate.from_template(template)
+
+        # Create ReAct agent (compatible with all LLM providers)
+        agent = create_react_agent(
             llm=self.llm,
             tools=self.tools,
             prompt=prompt
@@ -141,7 +161,8 @@ class BaseFinanceAgent(ABC):
             tools=self.tools,
             verbose=True,
             return_intermediate_steps=True,
-            max_iterations=10
+            max_iterations=10,
+            handle_parsing_errors=True
         )
 
     async def execute(

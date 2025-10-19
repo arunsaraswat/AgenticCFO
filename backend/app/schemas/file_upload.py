@@ -45,6 +45,8 @@ class FileUploadResponse(FileUploadBase):
     error_message: Optional[str] = None
     uploaded_by_user_id: Optional[int] = None
     created_at: datetime = Field(..., description="Timestamp when file was uploaded")
+    work_order_id: Optional[int] = Field(None, description="Work order ID if auto-created")
+    dataset_id: Optional[int] = Field(None, description="Dataset ID if created")
 
     class Config:
         """Pydantic configuration."""

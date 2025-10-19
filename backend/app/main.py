@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import auth, intake, users, dashboard, agents, work_orders
+from app.api import auth, intake, users, dashboard, agents, work_orders, artifacts
 
 # Import all models to register them with SQLAlchemy
 # This ensures foreign key relationships can be resolved at runtime
@@ -38,6 +38,7 @@ app.include_router(users.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(agents.router, prefix="/api")
 app.include_router(work_orders.router, prefix="/api")
+app.include_router(artifacts.router, prefix="/api")
 
 
 @app.get("/")
